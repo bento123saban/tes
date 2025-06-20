@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>TES</title>
+</head>
+<body>
+  <script>
+    
+    function getCurrentLocation() {
+      return new Promise((resolve, reject) => {
+        if (!navigator.geolocation) {
+          reject(new Error("Geolocation tidak didukung oleh browser ini."));
+        } else {
+          navigator.geolocation.getCurrentPosition(resolve, reject);
+        }
+      });
+    }
+
+    let coordinate = "";
+    (async () => {
+      try {
+        const position = await getCurrentLocation();
+        const { latitude, longitude } = position.coords;
+        coordinate = latitude + ", " + longitude;
+      } catch (err) {
+        console.error("Gagal dapat lokasi:", err.message);
+      }
+    })();
+
+    const pad = n => n.toString().padStart(2, '0');
+
+    const year   = new Date().getFullYear();
+    const month  = pad(new Date().getMonth() + 1); // bulan dimulai dari 0
+    const day    = pad(new Date().getDate());
+    const hour   = pad(new Date().getHours());
+    const minute = pad(new Date().getMinutes());
+    const second = pad(new Date().getSeconds());
+
+    const formated =  `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+
+    async function ftch() {
+      const link = "https://script.google.com/macros/s/AKfycbwqMrqZy62HNAZhJwOEnMczzawnItEpo8uv0R63o23aFTd6mpkZaabm34f7K0HYdmfZiw/exec"; // ganti dengan link kamu
+      try {
+        const response = await fetch(link, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            col2: "2025-06-21 10:21:00",
+            col3: "status",
+            col4: "Lorem Ipsum",
+            col5: "DE 1234 AM",
+            col6: "A 1234",
+            col7: "RUTIN",
+            col8: "Sesuai",
+            col9: 3,
+            col10: "latitude, longitude"
+          })
+        });
+
+        const result = await response.json();
+        console.log("Berhasil:", result);
+
+      } catch (err) {
+        console.error("Terjadi error:", err.message);
+      }
+    }
+
+    ftch()
+
+
+
+  </script>
+</body>
+</html>
